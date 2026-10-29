@@ -9,8 +9,12 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 private const val BASE_URL = "https://spendings-backend.t02.ru/"
+
+// connect/read-таймауты не покрывают DNS: без сети запрос мог висеть бесконечно
+private const val CALL_TIMEOUT_SECONDS = 20L
 
 private val AUTH_INTERCEPTOR = named("authInterceptor")
 private val LOGGING_INTERCEPTOR = named("loggingInterceptor")
@@ -40,6 +44,7 @@ val networkModule = module {
 
     single {
         OkHttpClient.Builder()
+            .callTimeout(CALL_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .addInterceptor(get<Interceptor>(AUTH_INTERCEPTOR))
             .addInterceptor(get<Interceptor>(LOGGING_INTERCEPTOR))
             .build()
