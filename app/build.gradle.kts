@@ -33,6 +33,7 @@ android {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":feature:transactions"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

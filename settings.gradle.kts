@@ -25,3 +25,4 @@ dependencyResolutionManagement {
 rootProject.name = "FinanceTracker"
 include(":app")
 include(":core")
+include(":feature:transactions")

@@ -1,0 +1,15 @@
+<resources>
+    <string name="transactions_title">Трекер финансов</string>
+    <string name="transactions_type_all">Все операции</string>
+    <string name="transactions_type_income">Доходы</string>
+    <string name="transactions_type_expense">Расходы</string>
+    <string name="transactions_all_categories">Все категории</string>
+    <string name="transactions_repeat">Повтор</string>
+    <string name="transactions_empty">За этот период операций нет</string>
+    <string name="transactions_delete">Удалить</string>
+    <string name="transactions_add">Добавить операцию</string>
+    <string name="transactions_error">Не смогли\nзагрузить контент :(</string>
+    <string name="transactions_retry">Попробовать снова</string>
+    <string name="transactions_delete_error">Не удалось удалить операцию</string>
+    <string name="transactions_load_more_error">Не удалось загрузить операции</string>
+</resources>
