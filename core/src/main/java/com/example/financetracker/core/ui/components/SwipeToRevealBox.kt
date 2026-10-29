@@ -28,7 +28,7 @@ import kotlin.math.roundToInt
 private const val FLING_VELOCITY_THRESHOLD = 1000f
 
 /**
- * Контейнер, который свайпом влево сдвигает [content] и открывает под ним [actions] шириной [actionsWidth].
+ * Контейнер, который свайпом вправо сдвигает [content] и открывает под ним [actions] шириной [actionsWidth].
  * В [actions] передаётся функция закрытия, чтобы после нажатия на действие вернуть карточку на место.
  */
 @Composable
@@ -44,13 +44,15 @@ fun SwipeToRevealBox(
     val close: () -> Unit = { scope.launch { offset.animateTo(0f) } }
 
     Box(modifier = modifier.height(IntrinsicSize.Min)) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .fillMaxHeight()
-                .width(actionsWidth)
-        ) {
-            actions(close)
+        if (offset.value.roundToInt() > 0) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .fillMaxHeight()
+                    .width(actionsWidth)
+            ) {
+                actions(close)
+            }
         }
         Box(
             modifier = Modifier
@@ -60,12 +62,12 @@ fun SwipeToRevealBox(
                 .draggable(
                     orientation = Orientation.Horizontal,
                     state = rememberDraggableState { delta ->
-                        scope.launch { offset.snapTo((offset.value + delta).coerceIn(-maxOffset, 0f)) }
+                        scope.launch { offset.snapTo((offset.value + delta).coerceIn(0f, maxOffset)) }
                     },
                     onDragStopped = { velocity ->
-                        val shouldOpen = velocity < -FLING_VELOCITY_THRESHOLD ||
-                            (velocity <= FLING_VELOCITY_THRESHOLD && offset.value < -maxOffset / 2)
-                        offset.animateTo(if (shouldOpen) -maxOffset else 0f, initialVelocity = velocity)
+                        val shouldOpen = velocity > FLING_VELOCITY_THRESHOLD ||
+                            (velocity >= -FLING_VELOCITY_THRESHOLD && offset.value > maxOffset / 2)
+                        offset.animateTo(if (shouldOpen) maxOffset else 0f, initialVelocity = velocity)
                     }
                 )
         ) {

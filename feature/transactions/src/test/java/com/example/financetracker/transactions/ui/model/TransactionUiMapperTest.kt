@@ -15,8 +15,8 @@ class TransactionUiMapperTest {
     private val mapper = TransactionUiMapper()
 
     @Test
-    fun `expense amount has kopecks and no sign`() {
-        assertEquals("829,54${NBSP}₽", mapper.formatAmount(BigDecimal("829.54"), isIncome = false))
+    fun `expense amount has kopecks and minus sign`() {
+        assertEquals("-829,54${NBSP}₽", mapper.formatAmount(BigDecimal("829.54"), isIncome = false))
     }
 
     @Test
@@ -26,13 +26,26 @@ class TransactionUiMapperTest {
 
     @Test
     fun `thousands are separated and zero kopecks are dropped`() {
-        assertEquals("1${NBSP}240${NBSP}₽", mapper.formatAmount(BigDecimal("1240.00"), isIncome = false))
-        assertEquals("36${NBSP}550,24${NBSP}₽", mapper.formatAmount(BigDecimal("36550.24"), isIncome = false))
+        assertEquals("-1${NBSP}240${NBSP}₽", mapper.formatAmount(BigDecimal("1240.00"), isIncome = false))
+        assertEquals("-36${NBSP}550,24${NBSP}₽", mapper.formatAmount(BigDecimal("36550.24"), isIncome = false))
     }
 
     @Test
     fun `amount is rounded to two digits`() {
-        assertEquals("10,13${NBSP}₽", mapper.formatAmount(BigDecimal("10.125"), isIncome = false))
+        assertEquals("-10,13${NBSP}₽", mapper.formatAmount(BigDecimal("10.125"), isIncome = false))
+    }
+
+    @Test
+    fun `fractional amount always has two kopeck digits`() {
+        assertEquals("-95,50${NBSP}₽", mapper.formatAmount(BigDecimal("95.5"), isIncome = false))
+        assertEquals("+1${NBSP}299,90${NBSP}₽", mapper.formatAmount(BigDecimal("1299.9"), isIncome = true))
+        assertEquals("-95${NBSP}₽", mapper.formatAmount(BigDecimal("95.00"), isIncome = false))
+    }
+
+    @Test
+    fun `kopeck display is decided after rounding`() {
+        assertEquals("-10${NBSP}₽", mapper.formatAmount(BigDecimal("9.999"), isIncome = false))
+        assertEquals("-0,01${NBSP}₽", mapper.formatAmount(BigDecimal("0.005"), isIncome = false))
     }
 
     @Test

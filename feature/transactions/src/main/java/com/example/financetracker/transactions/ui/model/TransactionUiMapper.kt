@@ -41,10 +41,12 @@ class TransactionUiMapper {
         }
     }
 
-    /** «829,54 ₽» для расхода, «+5 000 ₽» для дохода. Копейки показываются, только если они есть. */
+    /** «-829,54 ₽» для расхода, «+5 000 ₽» для дохода. Копейки показываются, только если они есть. */
     fun formatAmount(amount: BigDecimal, isIncome: Boolean): String {
-        val sign = if (isIncome) "+" else ""
-        return "$sign${amountFormat.format(amount)}$NBSP$CURRENCY"
+        val sign = if (isIncome) "+" else "-"
+        val rounded = amount.setScale(2, RoundingMode.HALF_UP)
+        amountFormat.minimumFractionDigits = if (rounded.stripTrailingZeros().scale() > 0) 2 else 0
+        return "$sign${amountFormat.format(rounded)}$NBSP$CURRENCY"
     }
 
     /** «Вторник, 21 августа». */
